@@ -16,17 +16,15 @@ def main():
         pm - starts night journal
     '''
     logging.info('Keyword evoked and Main start')
-    
     timeDifference = ''
-    print('in main')
     args = sys.argv[1:]
-    print('count of args :: {}'.format(len(args)))
+    logging.debug('First argument received {} and number of arguments {}'.format(args, len(args)))
+
     for arg in args:
-        print('passed argument :: {}'.format(arg))
+        logging.debug('Command(s) received :: {}'.format(arg))
     # my_function('hello world')
     
-    print(args[0])
-    journal(args[0])
+    journal(args[0].lower())
     logging.info('Main function ended')
 
 def journal(tod):
@@ -38,15 +36,19 @@ def journal(tod):
 
     '''
     logging.info('Journal function started')
+    logging.debug('Journal function received argument: {}'.format(tod))
     if tod != 'am':
-        morning(tod)
-    else:
         evening()
+    else:
+        morning(tod)
     logging.info('Journal function ended')
 
 def morning(tod):
     '''
-    # Morning 
+    # Morning uses helper function getAnswers to ask morning questions for journal entries. 
+    #
+    # @params tod: string; 
+    # Below is the questions for morning and their corresponding numbers?
     - I am grateful for: (three lines) 0
     - What would make today great? (three lines) 6
     - Daily affirmations 7
@@ -55,6 +57,7 @@ def morning(tod):
     - Schedule 10
     '''
     logging.info('Morning function started')
+    logging.debug('morning function received argument: {}'.format(tod))
     grateful = getAnswers(0, 3)
     print(grateful)
     #great = getAnswers(6, 3)
@@ -66,7 +69,9 @@ def morning(tod):
 
 def evening():
     '''
-    # Night
+    # Night uses helper function to getAnswers to ask Evening questions and collect answers for journal entries
+    #
+    # Below are the questions for the Evening and their corresponding numbers. 
     - 3 amazing things that happened today 2
     - How could I have made today even better? (three lines) 3
     - Lessons learned (3) 4
@@ -86,31 +91,53 @@ def evening():
     logging.info('Evening function ended')
 
 def getAnswers(quest,asknum):
-
+    '''
+    # getAnswers is a helper function that collects responses to journaling questions. Uses helper function questions to get the 
+    # questions based on the parameters received. 
+    # 
+    # @params quest: int; represents the questions key in the dictionary in the helper function
+    # @params asknum: int; the number of times the question will be asked. 
+    '''
+    logging.info('getAnswers function started')
+    logging.debug('getAnswers function received argument: quest = {}; asknum = {}'.format(quest,asknum))
     response = []
     for i in range(0,asknum):
-        response.append(raw_input(questions(quest)))
+        response.append(input(questions(quest)))
 
+    logging.info('getAnswers function ended')
     return response
 
 def questions(quest):
-    
+    '''
+    # is a helper function to getAnswers and returns a question based on the arguement received. 
+    #
+    # @params quest: int; is the key in the dictionary to a question
+    # @returns: string, which is the question to be asked. 
+    '''
+    logging.info('questions function started')
+    logging.debug('questions function received argument: {}'.format(quest))
     switch={
-        0:'What are you grateful for this morning gorgeous?',
-        1:'What are you grateful for this evening gorgeous?',
-        2:'Tell me about something today that was amazing!',
-        3:'How could I have made today better?',
-        4:'List a Lesson Learned today.',
-        5:'Name a victory from today!',
-        6:'What would make today great?',
-        7:'Affirm yourself now!',
-        8:'what is your goal today?',
-        9:'What is a target today?',
-        10:'how do you plan on spending your day?',
-        11:'Did you hit your goal today?',
-        12:'Did you hit your targets today?'
+        0:'What are you grateful for this morning gorgeous? ',
+        1:'What are you grateful for this evening gorgeous? ',
+        2:'Tell me about something today that was amazing! ',
+        3:'How could I have made today better? ',
+        4:'List a Lesson Learned today. ',
+        5:'Name a victory from today! ',
+        6:'What would make today great? ',
+        7:'Affirm yourself now! ',
+        8:'what is your goal today? ',
+        9:'What is a target today? ',
+        10:'how do you plan on spending your day? ',
+        11:'Did you hit your goal today? ',
+        12:'Did you hit your targets today? '
         }
-    return switcher.get(quest,"error")
+    question = switch.get(quest,"error")
+    if question == 'error':
+        logging.error('ERROR: Switch does not contain question. Received question number:: {}'.format(quest))
+
+    logging.debug('questions function will return this result: {}'.format(question))
+    logging.info('questions function ended')
+    return question
 
 if __name__ == '__main__':
     main()
